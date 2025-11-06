@@ -4,6 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Nexo</title>
+  <!-- Favicon (SVG data URI) y meta para redes sociales -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23000'/%3E%3Ctext x='50' y='62' font-size='56' text-anchor='middle' fill='%2300ff99' font-family='Courier New, monospace'%3EN%3C/text%3E%3C/svg%3E" />
+  <meta name="description" content="Nexo — Página personal interactiva con efectos visuales." />
+  <meta property="og:title" content="Nexo" />
+  <meta property="og:description" content="Nexo — Página personal interactiva con efectos visuales." />
+  <meta property="og:url" content="https://bruskcabet.github.io" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Nexo" />
+  <meta name="twitter:description" content="Nexo — Página personal interactiva con efectos visuales." />
   <style>
     body {
       margin: 0;
@@ -44,6 +54,16 @@
       display: block;
       margin-top: 2vh;
       font-size: min(5vw, 28px);
+    }
+
+    /* Título visible dentro de la página */
+    .titulo {
+      margin: 0 0 8px 0;
+      font-size: min(6.5vw, 48px);
+      color: #00ff99;
+      letter-spacing: 1px;
+      text-shadow: 0 0 8px rgba(0,255,153,0.4);
+      font-weight: 700;
     }
 
     @media (max-width: 768px) {
@@ -116,7 +136,8 @@
 <body>
   <canvas id="matrix"></canvas>
   <div id="mensaje">
-    Voçe me entendhe<br />
+    <h1 class="titulo">Nexo</h1>
+    <div class="pregunta">Voçe me entendhe</div>
     <span></span>
     <div class="botones">
       <button id="btnSi" onclick="respuesta('Sí')">Sim</button>
