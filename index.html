@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Web 6</title>
+  <title>Nexo</title>
   <style>
     body {
       margin: 0;
@@ -52,9 +52,15 @@
     }
 
     .botones {
-      margin-top: 2vh;
-      position: relative;
-      height: 70px;
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 30%;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 20px;
+      z-index: 20;
     }
 
     .botones button {
@@ -67,6 +73,7 @@
       color: #ffffff;
       transition: transform 0.2s, background-color 0.3s;
       touch-action: manipulation;
+      margin: 0 10px;
     }
 
     .botones button:hover,
@@ -87,29 +94,32 @@
       z-index: 20;
     }
 
+   #btnSi,
+   #btnNo {
+     width: 120px;
+     position: fixed;
+     z-index: 30;
+   }
+
    #btnSi {
-  position: fixed;
-  left: 20%;
-  top: 20%;
-  z-index: 20;
-  transform: translate(-50%, -50%);
-}
+     left: calc(50% - 150px);
+     bottom: 30%;
+   }
 
    #btnNo {
-  position: fixed;
-  left: 55%;
-  top: 52%;
-  z-index: 30;
-  padding: 15px 30px;
-  font-size: min(2vw, 18px);
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  background-color: #818182;
-  color: #ffffff;
-  transition: transform 0.2s, background-color 0.3s;
-  touch-action: manipulation;
-}
+     left: calc(50% + 150px);
+     bottom: 30%;
+   }
+
+   @media (max-width: 768px) {
+     #btnSi {
+       left: calc(50% - 100px);
+     }
+     
+     #btnNo {
+       left: calc(50% + 100px);
+     }
+   }
 
 @media (max-width: 768px) {
   #btnSi {
@@ -136,12 +146,11 @@
   <div id="mensaje">
     Voçe me entendhe<br />
     <span></span>
-
-    <div class="botones">
-      <button id="btnSi" onclick="respuesta('Sí')">Sim</button>
-    </div>
   </div>
-  <button id="btnNo" onmouseenter="moverBotonNo('Nao')">Não</button>
+  <div class="botones">
+    <button id="btnSi" onclick="respuesta('Sí')">Sim</button>
+    <button id="btnNo" onmouseenter="moverBotonNo()">Não</button>
+  </div>
 
   <script>
     const canvas = document.getElementById('matrix');
