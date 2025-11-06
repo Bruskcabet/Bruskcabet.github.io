@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Web 6</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: rgb(0, 0, 0);
+      color: #000000;
+      font-family: 'Courier New', Courier, monospace;
+      overflow: hidden;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    #mensaje {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #f9f9fa;
+      font-size: 4.5vw;
+      text-align: center;
+      z-index: 10;
+      text-shadow: 5 5 10px #04f714;
+      padding: 5 10vw;
+    }
+
+    #mensaje span {
+      display: block;
+      margin-top: 2vh;
+      font-size: 5vw;
+    }
+
+    .botones {
+      margin-top: 2vh;
+      position: relative;
+      height: 70px;
+    }
+
+    .botones button {
+      padding: 10px 25px;
+      font-size: 2vw;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background-color: #818182;
+      color: #ffffff;
+      transition: transform 0.2s, background-color 0.3s;
+    }
+
+    .botones button:hover {
+      background-color: #fbfbff;
+      transform: scale(1.1);
+    }
+
+    #btnSi {
+      position: relative;
+      z-index: 20;
+    }
+
+   #btnSi {
+  position: fixed;
+  left: 103px;
+  top: 95px;
+  z-index: 20;
+}
+
+
+
+   #btnNo {
+  position: fixed;
+  left: 55%;
+  top: 52%;
+  z-index: 30;
+  padding: 10px 25px;
+  font-size: 2vw;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background-color: #818182;
+  color: #ffffff;
+  transition: transform 0.2s, background-color 0.3s;
+}
+
+
+
+    #btnNo:hover {
+      background-color: #6b6ca0;
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+  <canvas id="matrix"></canvas>
+  <div id="mensaje">
+    Voçe me entendhe<br />
+    <span></span>
+
+    <div class="botones">
+      <button id="btnSi" onclick="respuesta('Sí')">Sim</button>
+    </div>
+  </div>
+  <button id="btnNo" onmouseenter="moverBotonNo('Nao')">Não</button>
+
+  <script>
+    const canvas = document.getElementById('matrix');
+    const ctx = canvas.getContext('2d');
+
+    let fontSize = 16;
+    let columns, drops;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      columns = Math.floor(canvas.width / fontSize);
+      drops = Array(columns).fill(0);
+    }
+
+    function draw() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = '#00BFFF'; // letras azules
+      ctx.font = fontSize + 'px monospace';
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters[Math.floor(Math.random() * letters.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    }
+
+    const letters = '❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️'.split('');
+    resizeCanvas();
+    setInterval(draw, 25);
+    window.addEventListener('resize', resizeCanvas);
+
+    function respuesta(opcion) {
+      alert("Has elegido: " + opcion);
+    }
+
+    function moverBotonNo() {
+      const btnNo = document.getElementById('btnNo');
+      const maxX = window.innerWidth - btnNo.offsetWidth - 10;
+      const maxY = window.innerHeight - btnNo.offsetHeight - 10;
+      const randomX = Math.floor(Math.random() * maxX);
+      const randomY = Math.floor(Math.random() * maxY);
+      btnNo.style.left = randomX + 'px';
+      btnNo.style.top = randomY + 'px';
+    }
+  </script>
+</body>
+</html>
