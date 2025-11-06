@@ -1,5 +1,5 @@
 // Cache version (increment when changing cached assets)
-const CACHE_NAME = 'nexo-cache-v2';
+const CACHE_NAME = 'nexo-cache-v3';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
