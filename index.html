@@ -6,7 +6,9 @@
   <title>Nexo</title>
   <meta name="theme-color" content="#000000" />
   <!-- Favicon (SVG data URI) y meta para redes sociales -->
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23000'/%3E%3Ctext x='50' y='62' font-size='56' text-anchor='middle' fill='%2300ff99' font-family='Courier New, monospace'%3EN%3C/text%3E%3C/svg%3E" />
+  <!-- Favicon: preferimos servir un archivo para mejor compatibilidad -->
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="alternate icon" href="/favicon.svg" />
   <meta name="description" content="Nexo — Página personal interactiva con efectos visuales." />
   <meta property="og:title" content="Nexo" />
   <meta property="og:description" content="Nexo — Página personal interactiva con efectos visuales." />
@@ -16,6 +18,7 @@
   <meta name="twitter:title" content="Nexo" />
   <meta name="twitter:description" content="Nexo — Página personal interactiva con efectos visuales." />
   <link rel="manifest" href="/manifest.json" />
+  <meta property="og:image" content="https://bruskcabet.github.io/og-image.svg" />
   <style>
     body {
       margin: 0;
@@ -221,6 +224,17 @@
       requestAnimationFrame(draw);
     }
     window.addEventListener('resize', resizeCanvas);
+    
+    // Registrar service worker para PWA (si está disponible)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/service-worker.js').then(function(reg) {
+          console.log('Service worker registrado.', reg);
+        }).catch(function(err) {
+          console.warn('Error al registrar service worker:', err);
+        });
+      });
+    }
 
     function respuesta(opcion) {
       alert("Has elegido: " + opcion);
