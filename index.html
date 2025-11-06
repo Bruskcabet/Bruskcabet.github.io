@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Nexo</title>
+  <meta name="theme-color" content="#000000" />
   <!-- Favicon (SVG data URI) y meta para redes sociales -->
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23000'/%3E%3Ctext x='50' y='62' font-size='56' text-anchor='middle' fill='%2300ff99' font-family='Courier New, monospace'%3EN%3C/text%3E%3C/svg%3E" />
   <meta name="description" content="Nexo — Página personal interactiva con efectos visuales." />
@@ -14,6 +15,7 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Nexo" />
   <meta name="twitter:description" content="Nexo — Página personal interactiva con efectos visuales." />
+  <link rel="manifest" href="/manifest.json" />
   <style>
     body {
       margin: 0;
@@ -31,7 +33,7 @@
       height: 100vh;
     }
 
-    #mensaje {
+  #mensaje {
       position: absolute;
       top: 50%;
       left: 50%;
@@ -40,7 +42,7 @@
       font-size: min(4.5vw, 24px);
       text-align: center;
       z-index: 10;
-      text-shadow: 0 0 10px #04f714;
+  text-shadow: 0 0 10px #04f714;
       padding: 20px;
       width: 90%;
       max-width: 600px;
@@ -48,6 +50,13 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
+    }
+
+    /* Enfoque accesible para navegación por teclado */
+    .botones button:focus {
+      outline: 3px solid rgba(0,255,153,0.95);
+      outline-offset: 4px;
+      box-shadow: 0 0 12px rgba(0,255,153,0.2);
     }
 
     #mensaje span {
@@ -135,13 +144,13 @@
 </head>
 <body>
   <canvas id="matrix"></canvas>
-  <div id="mensaje">
-    <h1 class="titulo">Nexo</h1>
-    <div class="pregunta">Voçe me entendhe</div>
+  <div id="mensaje" role="main" aria-labelledby="titulo">
+    <h1 id="titulo" class="titulo">Nexo</h1>
+    <div class="pregunta" aria-hidden="false">Voçe me entendhe</div>
     <span></span>
-    <div class="botones">
-      <button id="btnSi" onclick="respuesta('Sí')">Sim</button>
-      <button id="btnNo" onclick="respuesta('Não')">Não</button>
+    <div class="botones" role="group" aria-label="Opciones">
+      <button id="btnSi" type="button" aria-label="Responder Sí" onclick="respuesta('Sí')">Sim</button>
+      <button id="btnNo" type="button" aria-label="Responder No" onclick="respuesta('Não')">Não</button>
     </div>
   </div>
 
@@ -152,35 +161,65 @@
     let fontSize = 16;
     let columns, drops;
 
+    // Soporte para pantallas de alta densidad
     function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.style.width = window.innerWidth + 'px';
+      canvas.style.height = window.innerHeight + 'px';
+      canvas.width = Math.floor(window.innerWidth * dpr);
+      canvas.height = Math.floor(window.innerHeight * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
       fontSize = window.innerWidth < 768 ? 12 : 16;
-      columns = Math.floor(canvas.width / fontSize);
+      columns = Math.floor(window.innerWidth / fontSize);
       drops = Array(columns).fill(0);
     }
 
-    function draw() {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+    // Animación con requestAnimationFrame y límite de FPS para ahorrar batería
+    const TARGET_FPS = 30;
+    const FRAME_INTERVAL = 1000 / TARGET_FPS;
+    let lastFrameTime = 0;
+
+    function draw(timestamp) {
+      // Si el usuario prefiere reducir movimiento, no animar
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReducedMotion) return;
+
+      if (!lastFrameTime) lastFrameTime = timestamp;
+      const delta = timestamp - lastFrameTime;
+      if (delta < FRAME_INTERVAL) {
+        requestAnimationFrame(draw);
+        return;
+      }
+      lastFrameTime = timestamp;
+
+      // Dibujar con ligera opacidad para efecto persistente, pero más ligero para rendimiento
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.12)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.fillStyle = '#00BFFF'; // letras azules
+      ctx.fillStyle = '#00BFFF';
       ctx.font = fontSize + 'px monospace';
 
       for (let i = 0; i < drops.length; i++) {
         const text = letters[Math.floor(Math.random() * letters.length)];
         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
 
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+        if (drops[i] * fontSize > window.innerHeight && Math.random() > 0.975) {
           drops[i] = 0;
         }
         drops[i]++;
       }
+
+      requestAnimationFrame(draw);
     }
 
     const letters = '❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️❄️'.split('');
     resizeCanvas();
-    setInterval(draw, 25);
+
+    // Solo animar si el usuario NO pidió reducir movimiento
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      requestAnimationFrame(draw);
+    }
     window.addEventListener('resize', resizeCanvas);
 
     function respuesta(opcion) {
