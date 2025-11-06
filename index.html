@@ -20,6 +20,45 @@
   <link rel="manifest" href="/manifest.json" />
   <meta property="og:image" content="https://bruskcabet.github.io/og-image.svg" />
   <style>
+    #language-selector {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 99999;
+      display: flex;
+      gap: 10px;
+      background-color: rgba(46, 64, 82, 0.9);
+      padding: 10px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      pointer-events: auto;
+    }
+
+    .lang-btn {
+      padding: 10px 15px;
+      border: 2px solid #f5e6d3;
+      border-radius: 8px;
+      background-color: #2E4052;
+      color: #f5e6d3;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      margin: 0 5px;
+    }
+
+    .lang-btn:hover {
+      transform: scale(1.1);
+      background-color: #3E5062;
+      border-color: #ffffff;
+    }
+
+    .lang-btn.active {
+      background-color: #f5e6d3;
+      color: #2E4052;
+      box-shadow: 0 0 12px rgba(255,255,255,0.4);
+    }
+
     body {
       margin: 0;
       background-color: #f5e6d3;
@@ -152,17 +191,63 @@
 </head>
 <body>
   <canvas id="matrix"></canvas>
+  <div id="language-selector" style="position: fixed; top: 20px; right: 20px; z-index: 99999;">
+    <button class="lang-btn" onclick="changeLanguage('en')" aria-label="Switch to English">EN</button>
+    <button class="lang-btn active" onclick="changeLanguage('es')" aria-label="Cambiar a Español">ES</button>
+  </div>
   <div id="mensaje" role="main" aria-labelledby="titulo">
     <h1 id="titulo" class="titulo">Nexo</h1>
-    <div class="pregunta" aria-hidden="false">Voçe me entendhe</div>
+    <div class="pregunta" aria-hidden="false">Do you understand me</div>
     <span></span>
-    <div class="botones" role="group" aria-label="Opciones">
-      <button id="btnSi" type="button" aria-label="Responder Sí" onclick="respuesta('Sí')">Sim</button>
-      <button id="btnNo" type="button" aria-label="Responder No" onclick="respuesta('Não')">Não</button>
+    <div class="botones" role="group" aria-label="Options">
+      <button id="btnSi" type="button" aria-label="Answer Yes" onclick="respuesta('Yes')">Yes</button>
+      <button id="btnNo" type="button" aria-label="Answer No" onclick="respuesta('No')">No</button>
     </div>
   </div>
 
   <script>
+    // Translations object
+    const translations = {
+      en: {
+        title: "Nexo",
+        question: "Do you understand me",
+        yes: "Yes",
+        no: "No"
+      },
+      es: {
+        title: "Nexo",
+        question: "¿Me entiendes?",
+        yes: "Sí",
+        no: "No"
+      }
+    };
+
+    // Current language
+    let currentLang = 'en';
+
+    // Function to change language
+    function changeLanguage(lang) {
+      currentLang = lang;
+      
+      // Update active button state
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.textContent.toLowerCase() === lang.toLowerCase()) {
+          btn.classList.add('active');
+        }
+      });
+
+      // Update content
+      document.querySelector('#titulo').textContent = translations[lang].title;
+      document.querySelector('.pregunta').textContent = translations[lang].question;
+      document.querySelector('#btnSi').textContent = translations[lang].yes;
+      document.querySelector('#btnNo').textContent = translations[lang].no;
+
+      // Update ARIA labels
+      document.querySelector('#btnSi').setAttribute('aria-label', `Responder ${translations[lang].yes}`);
+      document.querySelector('#btnNo').setAttribute('aria-label', `Responder ${translations[lang].no}`);
+    }
+
     const canvas = document.getElementById('matrix');
     const ctx = canvas.getContext('2d');
 
@@ -229,7 +314,15 @@
       requestAnimationFrame(draw);
     }
     window.addEventListener('resize', resizeCanvas);
-b    
+    
+    // Establecer el idioma español por defecto y asegurar que los botones sean visibles
+    window.addEventListener('DOMContentLoaded', function() {
+      setTimeout(() => {
+        changeLanguage('es');
+        document.getElementById('language-selector').style.opacity = '1';
+      }, 100);
+    });
+    
     // Registrar service worker para PWA (si está disponible)
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
@@ -242,7 +335,11 @@ b
     }
 
     function respuesta(opcion) {
-      alert("Has elegido: " + opcion);
+      const messages = {
+        en: "You chose: ",
+        es: "Has elegido: "
+      };
+      alert(messages[currentLang] + opcion);
     }
 
     function moverBotonNo() {
