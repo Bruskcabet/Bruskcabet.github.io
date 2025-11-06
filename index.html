@@ -26,32 +26,37 @@
       right: 20px;
       z-index: 99999;
       display: flex;
-      gap: 10px;
-      background-color: #2E4052;
-      padding: 8px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      gap: 5px;
+      background: #000000;
+      padding: 5px;
+      border-radius: 30px;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.4);
+      border: 2px solid #04f714;
     }
 
     .lang-btn {
       padding: 8px 16px;
-      border: none;
-      border-radius: 4px;
-      background-color: transparent;
-      color: #f5e6d3;
+      border: 2px solid #04f714;
+      border-radius: 20px;
+      background-color: #000000;
+      color: #04f714;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 16px;
       font-weight: bold;
-      transition: all 0.2s ease;
+      transition: all 0.3s ease;
+      text-shadow: 0 0 5px #04f714;
     }
 
     .lang-btn:hover {
-      background-color: rgba(245, 230, 211, 0.2);
+      background-color: #04f714;
+      color: #000000;
+      text-shadow: none;
     }
 
     .lang-btn.active {
-      background-color: #f5e6d3;
-      color: #2E4052;
+      background-color: #04f714;
+      color: #000000;
+      text-shadow: none;
     }
 
     body {
@@ -186,7 +191,7 @@
 </head>
 <body>
   <canvas id="matrix"></canvas>
-  <div id="language-selector" style="position: fixed; top: 20px; right: 20px; z-index: 99999;">
+  <div id="language-selector">
     <button class="lang-btn" onclick="changeLanguage('en')" aria-label="Switch to English">EN</button>
     <button class="lang-btn active" onclick="changeLanguage('es')" aria-label="Cambiar a Español">ES</button>
   </div>
