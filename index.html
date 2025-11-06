@@ -27,17 +27,28 @@
       left: 50%;
       transform: translate(-50%, -50%);
       color: #f9f9fa;
-      font-size: 4.5vw;
+      font-size: min(4.5vw, 24px);
       text-align: center;
       z-index: 10;
-      text-shadow: 5 5 10px #04f714;
-      padding: 5 10vw;
+      text-shadow: 0 0 10px #04f714;
+      padding: 20px;
+      width: 90%;
+      max-width: 600px;
     }
 
     #mensaje span {
       display: block;
       margin-top: 2vh;
-      font-size: 5vw;
+      font-size: min(5vw, 28px);
+    }
+
+    @media (max-width: 768px) {
+      #mensaje {
+        font-size: 20px;
+      }
+      #mensaje span {
+        font-size: 24px;
+      }
     }
 
     .botones {
@@ -47,19 +58,28 @@
     }
 
     .botones button {
-      padding: 10px 25px;
-      font-size: 2vw;
+      padding: 15px 30px;
+      font-size: min(2vw, 18px);
       border: none;
       border-radius: 10px;
       cursor: pointer;
       background-color: #818182;
       color: #ffffff;
       transition: transform 0.2s, background-color 0.3s;
+      touch-action: manipulation;
     }
 
-    .botones button:hover {
+    .botones button:hover,
+    .botones button:active {
       background-color: #fbfbff;
       transform: scale(1.1);
+    }
+
+    @media (max-width: 768px) {
+      .botones button {
+        font-size: 16px;
+        padding: 12px 25px;
+      }
     }
 
     #btnSi {
@@ -69,26 +89,38 @@
 
    #btnSi {
   position: fixed;
-  left: 103px;
-  top: 95px;
+  left: 20%;
+  top: 20%;
   z-index: 20;
+  transform: translate(-50%, -50%);
 }
-
-
 
    #btnNo {
   position: fixed;
   left: 55%;
   top: 52%;
   z-index: 30;
-  padding: 10px 25px;
-  font-size: 2vw;
+  padding: 15px 30px;
+  font-size: min(2vw, 18px);
   border: none;
   border-radius: 10px;
   cursor: pointer;
   background-color: #818182;
   color: #ffffff;
   transition: transform 0.2s, background-color 0.3s;
+  touch-action: manipulation;
+}
+
+@media (max-width: 768px) {
+  #btnSi {
+    left: 30%;
+    top: 30%;
+  }
+  
+  #btnNo {
+    font-size: 16px;
+    padding: 12px 25px;
+  }
 }
 
 
@@ -121,6 +153,7 @@
     function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      fontSize = window.innerWidth < 768 ? 12 : 16;
       columns = Math.floor(canvas.width / fontSize);
       drops = Array(columns).fill(0);
     }
