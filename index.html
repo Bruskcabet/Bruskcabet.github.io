@@ -22,7 +22,7 @@
   <style>
     body {
       margin: 0;
-      background-color: rgb(0, 0, 0);
+      background-color: #f5e6d3;
       color: #000000;
       font-family: 'Courier New', Courier, monospace;
       overflow: hidden;
@@ -36,12 +36,12 @@
       height: 100vh;
     }
 
-  #mensaje {
+    #mensaje {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      color: #f9f9fa;
+      color: #2E4052;
       font-size: min(4.5vw, 24px);
       text-align: center;
       z-index: 10;
@@ -72,9 +72,9 @@
     .titulo {
       margin: 0 0 8px 0;
       font-size: min(6.5vw, 48px);
-      color: #00ff99;
+      color: #2E4052;
       letter-spacing: 1px;
-      text-shadow: 0 0 8px rgba(0,255,153,0.4);
+      text-shadow: 0 0 8px rgba(46,64,82,0.4);
       font-weight: 700;
     }
 
@@ -104,8 +104,8 @@
       border: none;
       border-radius: 10px;
       cursor: pointer;
-      background-color: #818182;
-      color: #ffffff;
+      background-color: #2E4052;
+      color: #f5e6d3;
       transition: transform 0.15s ease, background-color 0.2s ease;
       touch-action: manipulation;
       box-sizing: border-box;
@@ -197,10 +197,10 @@
       lastFrameTime = timestamp;
 
       // Dibujar con ligera opacidad para efecto persistente, pero más ligero para rendimiento
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.12)';
+      ctx.fillStyle = 'rgba(245, 230, 211, 0.12)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.fillStyle = '#00BFFF';
+      ctx.fillStyle = '#2E8BC0';
       ctx.font = fontSize + 'px monospace';
 
       for (let i = 0; i < drops.length; i++) {
@@ -224,7 +224,7 @@
       requestAnimationFrame(draw);
     }
     window.addEventListener('resize', resizeCanvas);
-    
+b    
     // Registrar service worker para PWA (si está disponible)
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
