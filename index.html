@@ -53,27 +53,28 @@
 
     .botones {
       position: fixed;
-      left: 0;
-      right: 0;
+      left: 50%;
+      transform: translateX(-50%);
       bottom: 30%;
       display: flex;
-      justify-content: space-around;
+      gap: 30px;
       align-items: center;
-      padding: 0 20px;
       z-index: 20;
     }
 
     .botones button {
-      padding: 15px 30px;
+      padding: 12px 22px;
+      width: 140px;
+      max-width: 40vw;
       font-size: min(2vw, 18px);
       border: none;
       border-radius: 10px;
       cursor: pointer;
       background-color: #818182;
       color: #ffffff;
-      transition: transform 0.2s, background-color 0.3s;
+      transition: transform 0.15s ease, background-color 0.2s ease;
       touch-action: manipulation;
-      margin: 0 10px;
+      box-sizing: border-box;
     }
 
     .botones button:hover,
@@ -94,44 +95,15 @@
       z-index: 20;
     }
 
-   #btnSi,
-   #btnNo {
-     width: 120px;
-     position: fixed;
-     z-index: 30;
-   }
+    #btnNo {
+      position: relative;
+      z-index: 20;
+    }
 
-   #btnSi {
-     left: calc(50% - 150px);
-     bottom: 30%;
-   }
-
-   #btnNo {
-     left: calc(50% + 150px);
-     bottom: 30%;
-   }
-
-   @media (max-width: 768px) {
-     #btnSi {
-       left: calc(50% - 100px);
-     }
-     
-     #btnNo {
-       left: calc(50% + 100px);
-     }
-   }
-
-@media (max-width: 768px) {
-  #btnSi {
-    left: 30%;
-    top: 30%;
-  }
-  
-  #btnNo {
-    font-size: 16px;
-    padding: 12px 25px;
-  }
-}
+    @media (max-width: 480px) {
+      .botones { bottom: 25%; gap: 16px; }
+      .botones button { width: 36vw; padding: 10px 16px; font-size: 14px; }
+    }
 
 
 
@@ -149,7 +121,7 @@
   </div>
   <div class="botones">
     <button id="btnSi" onclick="respuesta('Sí')">Sim</button>
-    <button id="btnNo" onmouseenter="moverBotonNo()">Não</button>
+    <button id="btnNo" onclick="respuesta('Não')">Não</button>
   </div>
 
   <script>
@@ -195,13 +167,8 @@
     }
 
     function moverBotonNo() {
-      const btnNo = document.getElementById('btnNo');
-      const maxX = window.innerWidth - btnNo.offsetWidth - 10;
-      const maxY = window.innerHeight - btnNo.offsetHeight - 10;
-      const randomX = Math.floor(Math.random() * maxX);
-      const randomY = Math.floor(Math.random() * maxY);
-      btnNo.style.left = randomX + 'px';
-      btnNo.style.top = randomY + 'px';
+      // Botones fijos: función desactivada para mantener alineación
+      return;
     }
   </script>
 </body>
