@@ -20,6 +20,37 @@
   <link rel="manifest" href="/manifest.json" />
   <meta property="og:image" content="https://bruskcabet.github.io/og-image.svg" />
   <style>
+    /* Animaciones globales */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateY(-20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    @keyframes blink {
+      50% { border-color: transparent; }
+    }
+
+    /* Efecto de carga inicial */
+    body > * {
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+
     #language-selector {
       position: fixed;
       top: 20px;
@@ -112,6 +143,16 @@
       font-size: min(5vw, 28px);
     }
 
+    .pregunta {
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 3px solid #04f714;
+      width: 0;
+      animation: typing 2s steps(30) 0.5s forwards,
+                blink 0.5s step-end infinite alternate;
+      margin: 1em 0;
+    }
+
     /* Título visible dentro de la página */
     .titulo {
       margin: 0 0 8px 0;
@@ -157,8 +198,28 @@
 
     .botones button:hover,
     .botones button:active {
-      background-color: #fbfbff;
+      background-color: #04f714;
+      color: #000000;
       transform: scale(1.1);
+      box-shadow: 0 0 15px #04f714;
+      text-shadow: none;
+    }
+
+    /* Mejoras de accesibilidad */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body, html, canvas {
+        background-color: #1a1a1a;
+      }
+      #mensaje {
+        color: #ffffff;
+      }
     }
 
     @media (max-width: 768px) {
@@ -227,9 +288,11 @@
 
     // Function to change language
     function changeLanguage(lang) {
+      if (currentLang === lang) return;
+      
       currentLang = lang;
       
-      // Update active button state
+      // Actualizar estado de los botones
       document.querySelectorAll('.lang-btn').forEach(btn => {
         btn.classList.remove('active');
         if (btn.textContent.toLowerCase() === lang.toLowerCase()) {
@@ -237,7 +300,13 @@
         }
       });
 
-      // Update content
+      // Animación de transición
+      const pregunta = document.querySelector('.pregunta');
+      pregunta.style.animation = 'none';
+      pregunta.offsetHeight; // Trigger reflow
+      pregunta.style.animation = 'typing 1s steps(30) forwards, blink 0.5s step-end infinite alternate';
+      
+      // Actualizar contenido con transiciones
       document.querySelector('#titulo').textContent = translations[lang].title;
       document.querySelector('.pregunta').textContent = translations[lang].question;
       document.querySelector('#btnSi').textContent = translations[lang].yes;
