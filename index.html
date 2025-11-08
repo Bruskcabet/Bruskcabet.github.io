@@ -248,6 +248,155 @@
       background-color: #6b6ca0;
       transform: scale(1.1);
     }
+  
+    /* --- Social panel styles --- */
+    .social-toggle {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      z-index: 100000;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg,#04f714,#2E8BC0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #001;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(4,247,20,0.2);
+      border: 2px solid rgba(255,255,255,0.06);
+    }
+
+    .social-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100000;
+      padding: 24px;
+    }
+
+    .social-overlay.open {
+      display: flex;
+      animation: fadeIn 240ms ease-out forwards;
+    }
+
+    .social-panel {
+      width: min(960px, 96vw);
+      max-height: 86vh;
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), #f5e6d3);
+      border-radius: 12px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.35);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .social-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: #2E4052;
+      color: #f5e6d3;
+    }
+
+    .social-body {
+      padding: 12px 16px;
+      overflow: auto;
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .compose {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .compose textarea, .compose input[type="text"] {
+      flex: 1 1 auto;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-family: inherit;
+      resize: vertical;
+      min-height: 56px;
+      background: #fff;
+      color: #222;
+    }
+
+    .compose button {
+      background: #04f714;
+      border: none;
+      color: #001;
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .feed {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .post {
+      background: #fff;
+      border-radius: 10px;
+      padding: 12px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .post .meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+
+    .post .content {
+      color: #222;
+      margin-bottom: 8px;
+      white-space: pre-wrap;
+    }
+
+    .post img.post-img {
+      max-width: 100%;
+      border-radius: 8px;
+      display: block;
+      margin-top: 8px;
+    }
+
+    .post .actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .post .actions button {
+      background: transparent;
+      border: 1px solid #ddd;
+      padding: 6px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    @media (max-width: 600px) {
+      .social-panel { width: 96vw; max-height: 94vh; }
+      .social-toggle { top: 70px; right: 12px; }
+    }
   </style>
 </head>
 <body>
@@ -255,6 +404,32 @@
   <div id="language-selector">
     <button class="lang-btn" onclick="changeLanguage('en')" aria-label="Switch to English">EN</button>
     <button class="lang-btn active" onclick="changeLanguage('es')" aria-label="Cambiar a Español">ES</button>
+  </div>
+
+  <!-- Social toggle button (no reemplaza la página de inicio) -->
+  <button class="social-toggle" id="open-social" aria-label="Abrir Nexo Social" title="Abrir Nexo Social" onclick="openSocial()">R</button>
+
+  <!-- Social overlay / panel -->
+  <div class="social-overlay" id="social-overlay" aria-hidden="true">
+    <div class="social-panel" role="dialog" aria-modal="true" aria-label="Nexo Social">
+      <div class="social-header">
+        <strong>Nexo Social</strong>
+        <div>
+          <button onclick="closeSocial()" aria-label="Cerrar" style="background:transparent;border:none;color:#f5e6d3;cursor:pointer;font-weight:700">Cerrar ✕</button>
+        </div>
+      </div>
+      <div class="social-body">
+        <div class="compose" aria-label="Componer publicación">
+          <textarea id="compose-text" placeholder="¿Qué quieres compartir?" aria-label="Texto de la publicación"></textarea>
+          <div style="display:flex;flex-direction:column;gap:8px;min-width:140px;">
+            <input id="compose-image" type="text" placeholder="URL imagen (opcional)" aria-label="URL de imagen" />
+            <button id="publish-btn" onclick="createPost()">Publicar</button>
+          </div>
+        </div>
+
+        <div class="feed" id="feed" aria-live="polite"></div>
+      </div>
+    </div>
   </div>
   <div id="mensaje" role="main" aria-labelledby="titulo">
     <h1 id="titulo" class="titulo">Nexo</h1>
@@ -414,6 +589,123 @@
     function moverBotonNo() {
       // Botones fijos: función desactivada para mantener alineación
       return;
+    }
+
+    /* --- Social feed logic (client-side, localStorage) --- */
+    const STORAGE_KEY = 'nexo_feed_v1';
+    let posts = [];
+
+    function loadPosts() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        posts = raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        posts = [];
+      }
+    }
+
+    function savePosts() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+      } catch (e) {
+        console.warn('No se pudo guardar el post:', e);
+      }
+    }
+
+    function openSocial() {
+      loadPosts();
+      renderFeed();
+      const overlay = document.getElementById('social-overlay');
+      overlay.classList.add('open');
+      overlay.setAttribute('aria-hidden', 'false');
+      // focus the textarea for convenience
+      setTimeout(() => document.getElementById('compose-text').focus(), 120);
+    }
+
+    function closeSocial() {
+      const overlay = document.getElementById('social-overlay');
+      overlay.classList.remove('open');
+      overlay.setAttribute('aria-hidden', 'true');
+    }
+
+    function createPost() {
+      const textEl = document.getElementById('compose-text');
+      const imgEl = document.getElementById('compose-image');
+      const text = (textEl.value || '').trim();
+      const img = (imgEl.value || '').trim();
+      if (!text && !img) {
+        alert('Añade texto o una imagen para publicar.');
+        return;
+      }
+      const post = {
+        id: Date.now(),
+        user: 'Tú',
+        text,
+        img: img || null,
+        likes: 0,
+        liked: false,
+        comments: [],
+        ts: new Date().toISOString()
+      };
+      posts.unshift(post);
+      savePosts();
+      renderFeed();
+      // clear composer
+      textEl.value = '';
+      imgEl.value = '';
+    }
+
+    function renderFeed() {
+      const feed = document.getElementById('feed');
+      if (!feed) return;
+      if (!posts.length) {
+        feed.innerHTML = '<div style="color:#666;padding:12px">No hay publicaciones todavía. Sé el primero en compartir.</div>';
+        return;
+      }
+      feed.innerHTML = posts.map(post => {
+        const time = new Date(post.ts).toLocaleString();
+        return `
+          <article class="post" data-id="${post.id}">
+            <div class="meta"><div><strong>${escapeHtml(post.user)}</strong></div><div>${time}</div></div>
+            <div class="content">${escapeHtml(post.text)}</div>
+            ${post.img ? `<img class="post-img" src="${escapeHtml(post.img)}" alt="Imagen de la publicación" loading="lazy">` : ''}
+            <div class="actions">
+              <button onclick="toggleLike(${post.id})">❤ ${post.likes}</button>
+              <button onclick="promptComment(${post.id})">💬 ${post.comments.length}</button>
+            </div>
+          </article>
+        `;
+      }).join('\n');
+    }
+
+    function toggleLike(id) {
+      const idx = posts.findIndex(p => p.id === id);
+      if (idx === -1) return;
+      const p = posts[idx];
+      p.liked = !p.liked;
+      p.likes += p.liked ? 1 : -1;
+      savePosts();
+      renderFeed();
+    }
+
+    function promptComment(id) {
+      const comment = prompt('Tu comentario:');
+      if (!comment) return;
+      const idx = posts.findIndex(p => p.id === id);
+      if (idx === -1) return;
+      posts[idx].comments.push({ user: 'Tú', text: comment, ts: new Date().toISOString() });
+      savePosts();
+      renderFeed();
+    }
+
+    function escapeHtml(s) {
+      if (!s) return '';
+      return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
     }
   </script>
 </body>
