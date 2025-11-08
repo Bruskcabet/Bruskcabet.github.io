@@ -637,7 +637,7 @@
       overlay.setAttribute('aria-hidden', 'true');
     }
 
-  function createPost() {
+  async function createPost() {
       const textEl = document.getElementById('compose-text');
       const imgUrlEl = document.getElementById('compose-image-url');
       const imgDataEl = document.getElementById('compose-image-data');
@@ -669,6 +669,55 @@
         comments: [],
         ts: new Date().toISOString()
       };
+      // If Firebase is active, upload images and save remotely; otherwise keep local
+      if (firebaseActive) {
+        // show a quick optimistic local post while uploading
+        posts.unshift({ ...post, uploading: true });
+        renderFeed();
+        try {
+          let fullUrl = null;
+          let thumbUrl = post.img_thumb || null;
+          if (post.img_full) {
+            fullUrl = await uploadImageToFirebase(post.img_full, 'full');
+          }
+          if (post.img_thumb) {
+            // upload thumb as well (optional)
+            const maybeThumb = await uploadImageToFirebase(post.img_thumb, 'thumb');
+            if (maybeThumb) thumbUrl = maybeThumb;
+          }
+          const remoteDoc = {
+            user: post.user,
+            text: post.text,
+            img_thumb: thumbUrl || null,
+            img_full: fullUrl || null,
+            likes: 0,
+            comments: [],
+            ts: new Date().toISOString()
+          };
+          const remoteId = await savePostRemote(remoteDoc);
+          // replace optimistic with saved remote entry
+          posts = posts.filter(p => !p.uploading);
+          if (remoteId) {
+            posts.unshift({ id: remoteId, ...remoteDoc });
+          } else {
+            // if remote save failed, fall back to local store
+            posts.unshift(post);
+          }
+        } catch (e) {
+          console.warn('Error al subir a Firebase, guardando localmente:', e);
+          posts.unshift(post);
+        }
+        savePosts();
+        renderFeed();
+        // clear composer
+        textEl.value = '';
+        imgUrlEl.value = '';
+        imgDataEl.value = '';
+        document.getElementById('compose-image-file').value = '';
+        return;
+      }
+
+      // Local fallback
       posts.unshift(post);
       savePosts();
       renderFeed();
@@ -838,6 +887,109 @@
       renderFeed();
     }
 
+    // --- Optional Firebase integration (client-side) ---
+    let firebaseActive = false;
+    let firebaseApp = null;
+    let firebaseFirestore = null;
+    let firebaseStorage = null;
+
+    // Convert dataURL to Blob
+    function dataURLToBlob(dataURL) {
+      const parts = dataURL.split(',');
+      const meta = parts[0].match(/:(.*?);/);
+      const mime = meta ? meta[1] : 'image/png';
+      const binary = atob(parts[1]);
+      const len = binary.length;
+      const u8 = new Uint8Array(len);
+      for (let i = 0; i < len; i++) u8[i] = binary.charCodeAt(i);
+      return new Blob([u8], { type: mime });
+    }
+
+    // Try to initialize Firebase if config is provided either as window.__FIREBASE_CONFIG__
+    // or as a JSON file at /firebase-config.json (so you can drop credentials there).
+    async function tryInitFirebase() {
+      try {
+        let config = window.__FIREBASE_CONFIG__ || null;
+        if (!config) {
+          // Try fetch with no-cache to allow updating credentials without cache issues
+          const resp = await fetch('/firebase-config.json', { cache: 'no-store' });
+          if (resp.ok) config = await resp.json();
+        }
+        if (!config) return; // no config provided, skip
+
+        // Load Firebase compat scripts dynamically (simple path for static use)
+        await loadScript('https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js');
+        await loadScript('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js');
+        await loadScript('https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js');
+
+        /* global firebase */
+        firebaseApp = firebase.initializeApp(config);
+        firebaseFirestore = firebase.firestore();
+        firebaseStorage = firebase.storage();
+        firebaseActive = true;
+
+        // Start listening to remote posts and sync locally
+        listenForRemotePosts();
+        console.log('Firebase inicializado: sincronización activada.');
+      } catch (e) {
+        console.warn('Firebase no inicializado:', e);
+      }
+    }
+
+    function loadScript(src) {
+      return new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = src;
+        s.async = true;
+        s.onload = resolve;
+        s.onerror = reject;
+        document.head.appendChild(s);
+      });
+    }
+
+    // Upload a dataURL image to Firebase Storage (if initialized). Returns downloadURL.
+    async function uploadImageToFirebase(dataUrl, filenamePrefix = 'post') {
+      if (!firebaseActive || !firebaseStorage) return null;
+      try {
+        const blob = dataURLToBlob(dataUrl);
+        const path = `posts/${filenamePrefix}_${Date.now()}`;
+        const ref = firebaseStorage.ref().child(path);
+        const snap = await ref.put(blob);
+        const url = await snap.ref.getDownloadURL();
+        return url;
+      } catch (e) {
+        console.warn('Error subiendo a Firebase:', e);
+        return null;
+      }
+    }
+
+    async function savePostRemote(post) {
+      if (!firebaseActive || !firebaseFirestore) return null;
+      try {
+        const docRef = await firebaseFirestore.collection('posts').add(post);
+        return docRef.id;
+      } catch (e) {
+        console.warn('Error guardando post en Firestore:', e);
+        return null;
+      }
+    }
+
+    // Listen for remote posts (keeps local 'posts' in sync). This is simple: it replaces local posts
+    // with the latest snapshot. You can enhance merge logic if desired.
+    function listenForRemotePosts() {
+      if (!firebaseActive || !firebaseFirestore) return;
+      firebaseFirestore.collection('posts').orderBy('ts', 'desc').onSnapshot(snapshot => {
+        const remote = [];
+        snapshot.forEach(doc => {
+          const d = doc.data();
+          remote.push({ id: doc.id, ...d });
+        });
+        posts = remote;
+        savePosts();
+        renderFeed();
+      });
+    }
+
     // Resize an Image object to a maximum width while preserving aspect ratio and return a compressed dataURL
     function resizeDataUrl(img, maxWidth, quality = 0.8) {
       return new Promise((resolve) => {
@@ -853,7 +1005,16 @@
         canvas.height = targetHeight;
         const c = canvas.getContext('2d');
         c.drawImage(img, 0, 0, targetWidth, targetHeight);
-        // prefer jpeg for compression; fallback to png if browser doesn't support jpeg output
+        // Prefer WebP when available (better compression), then JPEG, then PNG
+        try {
+          const test = canvas.toDataURL('image/webp', quality);
+          if (test && test.indexOf('data:image/webp') === 0) {
+            resolve(test);
+            return;
+          }
+        } catch (e) {
+          // ignore
+        }
         try {
           const dataUrl = canvas.toDataURL('image/jpeg', quality);
           resolve(dataUrl);
