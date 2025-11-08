@@ -3,22 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Nexo</title>
+  <title>Dripzy</title>
   <meta name="theme-color" content="#000000" />
   <!-- Favicon (SVG data URI) y meta para redes sociales -->
   <!-- Favicon: preferimos servir un archivo para mejor compatibilidad -->
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="alternate icon" href="/favicon.svg" />
-  <meta name="description" content="Nexo — Página personal interactiva con efectos visuales." />
-  <meta property="og:title" content="Nexo" />
-  <meta property="og:description" content="Nexo — Página personal interactiva con efectos visuales." />
-  <meta property="og:url" content="https://bruskcabet.github.io" />
+  <meta name="description" content="Dripzy — Red social interactiva con efectos visuales." />
+  <meta property="og:title" content="Dripzy" />
+  <meta property="og:description" content="Dripzy — Red social interactiva con efectos visuales." />
+  <meta property="og:url" content="https://bruskcabet.github.io/dripzy/" />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Nexo" />
-  <meta name="twitter:description" content="Nexo — Página personal interactiva con efectos visuales." />
+  <meta name="twitter:title" content="Dripzy" />
+  <meta name="twitter:description" content="Dripzy — Red social interactiva con efectos visuales." />
   <link rel="manifest" href="/manifest.json" />
-  <meta property="og:image" content="https://bruskcabet.github.io/og-image.svg" />
+  <meta property="og:image" content="https://bruskcabet.github.io/dripzy/og-image.svg" />
   <style>
     /* Animaciones globales */
     @keyframes fadeIn {
@@ -52,63 +52,87 @@
     }
 
     #language-selector {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 99999;
       display: flex;
-      gap: 5px;
-      background: #000000;
-      padding: 5px;
-      border-radius: 30px;
-      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.4);
-      border: 2px solid #04f714;
+      align-items: center;
+      background: #262626;
+      border-radius: 20px;
+      padding: 2px;
+      margin-left: 16px;
     }
 
     .lang-btn {
-      padding: 8px 16px;
-      border: 2px solid #04f714;
-      border-radius: 20px;
-      background-color: #000000;
-      color: #04f714;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 16px;
+      background-color: transparent;
+      color: #ffffff;
       cursor: pointer;
-      font-size: 16px;
-      font-weight: bold;
+      font-size: 13px;
+      font-weight: 600;
       transition: all 0.3s ease;
-      text-shadow: 0 0 5px #04f714;
     }
 
     .lang-btn:hover {
-      background-color: #04f714;
-      color: #000000;
-      text-shadow: none;
+      background: rgba(255, 255, 255, 0.1);
     }
 
     .lang-btn.active {
-      background-color: #04f714;
-      color: #000000;
-      text-shadow: none;
+      background: #0095f6;
+      color: #ffffff;
     }
+
+    /* Instagram-style main content padding for header */
+    #mensaje {
+      margin-top: 60px;
+    }
+
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
     body {
       margin: 0;
-      background-color: #f5e6d3;
-      color: #2E4052;
-      font-family: 'Courier New', Courier, monospace;
-      overflow: hidden;
+      background: #fafafa;
+      color: #262626;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
     }
     
     html {
-      background-color: #f5e6d3;
+      background: #fafafa;
     }
 
     canvas {
+      display: none;
+    }
+
+    /* Instagram-style header */
+    .app-header {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-color: #f5e6d3;
+      right: 0;
+      height: 60px;
+      background: #1a1f25;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 100;
+    }
+
+    .app-header .logo {
+      font-family: 'Inter', sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      color: #ffffff;
+      text-decoration: none;
+      background: linear-gradient(45deg, #0095f6, #00f2fe);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     #mensaje {
@@ -116,18 +140,22 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      color: #2E4052;
+      color: #ffffff;
       font-size: min(4.5vw, 24px);
       text-align: center;
       z-index: 10;
-  text-shadow: 0 0 10px #04f714;
-      padding: 20px;
+      padding: 40px;
       width: 90%;
       max-width: 600px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     }
 
     /* Enfoque accesible para navegación por teclado */
@@ -144,23 +172,42 @@
     }
 
     .pregunta {
-      overflow: hidden;
-      white-space: nowrap;
-      border-right: 3px solid #04f714;
-      width: 0;
-      animation: typing 2s steps(30) 0.5s forwards,
-                blink 0.5s step-end infinite alternate;
-      margin: 1em 0;
+      overflow: visible;
+      white-space: normal;
+      width: auto;
+      margin: 1.5em 0;
+      color: #4fd1c5;
+      font-size: min(4.5vw, 24px);
+      font-weight: 500;
+      background: linear-gradient(120deg, #4fd1c5, #38b2ac);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientText 3s ease infinite;
+    }
+
+    @keyframes gradientText {
+      0%, 100% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
     }
 
     /* Título visible dentro de la página */
     .titulo {
-      margin: 0 0 8px 0;
+      margin: 0 0 16px 0;
       font-size: min(6.5vw, 48px);
-      color: #2E4052;
-      letter-spacing: 1px;
-      text-shadow: 0 0 8px rgba(46,64,82,0.4);
+      color: #ffffff;
+      letter-spacing: 2px;
       font-weight: 700;
+      text-transform: uppercase;
+      background: linear-gradient(120deg, #00f2fe, #4facfe);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 2px 10px rgba(79, 209, 197, 0.3);
     }
 
     @media (max-width: 768px) {
@@ -182,27 +229,46 @@
     }
 
     .botones button {
-      padding: 12px 22px;
-      width: 140px;
+      padding: 12px 28px;
+      width: 160px;
       max-width: 40vw;
       font-size: min(2vw, 18px);
       border: none;
-      border-radius: 10px;
+      border-radius: 30px;
       cursor: pointer;
-      background-color: #2E4052;
-      color: #f5e6d3;
-      transition: transform 0.15s ease, background-color 0.2s ease;
+      background: linear-gradient(120deg, #4facfe 0%, #00f2fe 100%);
+      color: #ffffff;
+      font-weight: 600;
+      transition: all 0.3s ease;
       touch-action: manipulation;
       box-sizing: border-box;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(79, 209, 197, 0.3);
+    }
+
+    .botones button:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(120deg, #00f2fe 0%, #4facfe 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
     }
 
     .botones button:hover,
     .botones button:active {
-      background-color: #04f714;
-      color: #000000;
-      transform: scale(1.1);
-      box-shadow: 0 0 15px #04f714;
-      text-shadow: none;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(79, 209, 197, 0.5);
+    }
+
+    .botones button:hover:before {
+      opacity: 1;
     }
 
     /* Mejoras de accesibilidad */
@@ -229,17 +295,73 @@
       }
     }
 
-    /* Los botones usan el flujo normal dentro de #mensaje */
+    /* Instagram-style buttons */
     #btnSi, #btnNo {
-      width: 140px;
+      width: 120px;
       max-width: 40vw;
       position: relative;
       z-index: 20;
+      background: #0095f6;
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 14px;
+      padding: 7px 16px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    #btnSi:hover, #btnNo:hover {
+      background: #1877f2;
     }
 
     @media (max-width: 480px) {
-      .botones { gap: 16px; }
-      .botones button { width: 36vw; padding: 10px 16px; font-size: 14px; }
+      .botones { gap: 12px; }
+      .botones button { 
+        width: 36vw; 
+        padding: 7px 16px; 
+        font-size: 14px; 
+      }
+    }
+
+    /* Instagram-style post interaction icons */
+    .post-icons {
+      display: flex;
+      gap: 16px;
+      padding: 8px 16px;
+    }
+
+    .post-icon {
+      font-size: 24px;
+      color: #262626;
+      cursor: pointer;
+    }
+
+    .post-icon:hover {
+      opacity: 0.7;
+    }
+
+    /* Instagram-style comments section */
+    .comments-section {
+      border-top: 1px solid #dbdbdb;
+      padding: 8px 16px;
+    }
+
+    .comment {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .comment-user {
+      font-weight: 600;
+      color: #262626;
+    }
+
+    .comment-text {
+      color: #262626;
     }
 
 
@@ -251,28 +373,30 @@
   
     /* --- Social panel styles --- */
     .social-toggle {
-      position: fixed;
-      top: 80px;
-      right: 20px;
-      z-index: 100000;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: linear-gradient(135deg,#04f714,#2E8BC0);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #001;
-      font-weight: 700;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #0095f6;
+      color: #ffffff;
+      border: none;
+      font-size: 20px;
       cursor: pointer;
-      box-shadow: 0 6px 18px rgba(4,247,20,0.2);
-      border: 2px solid rgba(255,255,255,0.06);
+      transition: all 0.3s ease;
+      margin-left: 16px;
+    }
+
+    .social-toggle:hover {
+      background: #1877f2;
+      transform: scale(1.05);
     }
 
     .social-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.6);
+      background: rgba(0, 0, 0, 0.65);
       display: none;
       align-items: center;
       justify-content: center;
@@ -286,11 +410,11 @@
     }
 
     .social-panel {
-      width: min(960px, 96vw);
-      max-height: 86vh;
-      background: linear-gradient(180deg, rgba(255,255,255,0.98), #f5e6d3);
+      width: min(550px, 96vw);
+      max-height: 90vh;
+      background: #ffffff;
       border-radius: 12px;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.35);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -300,36 +424,139 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 16px;
-      background: #2E4052;
-      color: #f5e6d3;
+      padding: 14px 16px;
+      background: #ffffff;
+      border-bottom: 1px solid #dbdbdb;
+      color: #262626;
+    }
+
+    /* Navigation styles */
+    .social-nav {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .nav-item {
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.3s ease;
+    }
+
+    .nav-item:hover {
+      color: #0095f6;
     }
 
     .social-body {
-      padding: 12px 16px;
+      padding: 0;
       overflow: auto;
       flex: 1 1 auto;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 0;
+      background: #fafafa;
     }
 
     .compose {
       display: flex;
-      gap: 8px;
-      align-items: flex-start;
+      flex-direction: column;
+      gap: 12px;
+      background: #ffffff;
+      padding: 16px;
+      border-bottom: 1px solid #dbdbdb;
     }
 
     .compose textarea, .compose input[type="text"] {
-      flex: 1 1 auto;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-family: inherit;
-      resize: vertical;
-      min-height: 56px;
-      background: #fff;
-      color: #222;
+      width: 100%;
+      padding: 12px;
+      border-radius: 4px;
+      border: 1px solid #dbdbdb;
+      font-family: 'Inter', sans-serif;
+      resize: none;
+      min-height: 100px;
+      background: #ffffff;
+      color: #262626;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    /* Instagram-style compose form */
+    .compose-form {
+      background: #ffffff;
+      border-bottom: 1px solid #dbdbdb;
+      padding: 16px;
+    }
+
+    .compose-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #dbdbdb;
+    }
+
+    .compose-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #262626;
+    }
+
+    .compose-close {
+      background: none;
+      border: none;
+      color: #262626;
+      cursor: pointer;
+      font-size: 24px;
+    }
+
+    .compose-content {
+      display: flex;
+      gap: 12px;
+    }
+
+    .compose-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #efefef;
+    }
+
+    .compose-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid #dbdbdb;
+    }
+
+    .compose-button {
+      background: #0095f6;
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      padding: 6px 16px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .compose-button:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .compose textarea:focus, .compose input[type="text"]:focus {
+      outline: none;
+      border-color: #4facfe;
+      box-shadow: 0 0 0 2px rgba(79, 209, 197, 0.2);
+      background: rgba(255, 255, 255, 0.1);
     }
 
     .compose button {
@@ -346,29 +573,59 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
+      padding: 16px 0;
+      background: #fafafa;
     }
 
     .post {
-      background: #fff;
-      border-radius: 10px;
-      padding: 12px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
-      border: 1px solid rgba(0,0,0,0.04);
+      background: #ffffff;
+      border-radius: 0;
+      padding: 0;
+      border: 1px solid #dbdbdb;
+      margin-bottom: 12px;
+    }
+
+    @media (min-width: 640px) {
+      .post {
+        border-radius: 8px;
+      }
     }
 
     .post .meta {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 13px;
-      color: #666;
-      margin-bottom: 8px;
+      font-size: 14px;
+      color: #262626;
+      padding: 14px 16px;
+      border-bottom: 1px solid #efefef;
+    }
+
+    .post-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .post-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #efefef;
+    }
+
+    .post-user {
+      font-weight: 600;
+      color: #262626;
+      text-decoration: none;
     }
 
     .post .content {
-      color: #222;
-      margin-bottom: 8px;
+      color: #ffffff;
+      margin-bottom: 16px;
       white-space: pre-wrap;
+      line-height: 1.6;
+      font-size: 15px;
     }
 
     .post img.post-img {
@@ -385,36 +642,81 @@
     }
 
     .post .actions button {
-      background: transparent;
-      border: 1px solid #ddd;
-      padding: 6px 10px;
-      border-radius: 8px;
+      background: rgba(79, 209, 197, 0.1);
+      border: 1px solid rgba(79, 209, 197, 0.2);
+      padding: 8px 16px;
+      border-radius: 20px;
       cursor: pointer;
-      font-weight: 600;
+      font-weight: 500;
+      color: #4fd1c5;
+      transition: all 0.3s ease;
+      font-size: 14px;
+    }
+
+    .post .actions button:hover {
+      background: rgba(79, 209, 197, 0.2);
+      border-color: rgba(79, 209, 197, 0.4);
+      transform: translateY(-1px);
     }
 
     @media (max-width: 600px) {
       .social-panel { width: 96vw; max-height: 94vh; }
       .social-toggle { top: 70px; right: 12px; }
     }
+
+    /* Estilos para los comentarios */
+    .post #comments-container {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .post .comment {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 12px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+    }
+
+    /* Efectos de hover para elementos interactivos */
+    .social-header input[type="text"] {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      padding: 8px 16px;
+      border-radius: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .social-header input[type="text"]:focus {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: #4facfe;
+      outline: none;
+    }
   </style>
 </head>
 <body>
   <canvas id="matrix"></canvas>
-  <div id="language-selector">
-    <button class="lang-btn" onclick="changeLanguage('en')" aria-label="Switch to English">EN</button>
-    <button class="lang-btn active" onclick="changeLanguage('es')" aria-label="Cambiar a Español">ES</button>
-  </div>
-
-  <!-- Social toggle button (no reemplaza la página de inicio) -->
-  <button class="social-toggle" id="open-social" aria-label="Abrir Nexo Social" title="Abrir Nexo Social" onclick="openSocial()">R</button>
+  <!-- Instagram-style header -->
+  <header class="app-header">
+    <a href="/" class="logo">Dripzy</a>
+    <div class="social-nav">
+      <a href="#" class="nav-item">🏠 Inicio</a>
+      <a href="#" class="nav-item">💌 Mensajes</a>
+      <button class="social-toggle" id="open-social" aria-label="Nueva publicación" title="Nueva publicación" onclick="openSocial()">➕</button>
+    </div>
+    <div id="language-selector">
+      <button class="lang-btn" onclick="changeLanguage('en')" aria-label="Switch to English">EN</button>
+      <button class="lang-btn active" onclick="changeLanguage('es')" aria-label="Cambiar a Español">ES</button>
+    </div>
+  </header>
 
   <!-- Social overlay / panel -->
   <div class="social-overlay" id="social-overlay" aria-hidden="true">
-    <div class="social-panel" role="dialog" aria-modal="true" aria-label="Nexo Social">
+    <div class="social-panel" role="dialog" aria-modal="true" aria-label="Dripzy Social">
       <div class="social-header">
         <div style="display:flex;gap:12px;align-items:center;">
-          <strong>Nexo Social</strong>
+          <strong>Dripzy Social</strong>
           <input id="search-posts" type="text" placeholder="Buscar en el feed..." style="padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);" oninput="renderFeed()" aria-label="Buscar publicaciones" />
         </div>
         <div style="display:flex;gap:8px;align-items:center;">
@@ -444,7 +746,7 @@
     </div>
   </div>
   <div id="mensaje" role="main" aria-labelledby="titulo">
-    <h1 id="titulo" class="titulo">Nexo</h1>
+    <h1 id="titulo" class="titulo">Dripzy</h1>
     <div class="pregunta" aria-hidden="false">Do you understand me</div>
     <span></span>
     <div class="botones" role="group" aria-label="Options">
@@ -457,14 +759,16 @@
     // Translations object
     const translations = {
       en: {
-        title: "Nexo",
+        title: "Dripzy",
         question: "Do you understand me",
+        welcome: "Welcome to Dripzy",
         yes: "Yes",
         no: "No"
       },
       es: {
-        title: "Nexo",
+        title: "Dripzy",
         question: "¿Me entiendes?",
+        welcome: "Bienvenido a Dripzy",
         yes: "Sí",
         no: "No"
       }
@@ -487,15 +791,9 @@
         }
       });
 
-      // Animación de transición
-      const pregunta = document.querySelector('.pregunta');
-      pregunta.style.animation = 'none';
-      pregunta.offsetHeight; // Trigger reflow
-      pregunta.style.animation = 'typing 1s steps(30) forwards, blink 0.5s step-end infinite alternate';
-      
       // Actualizar contenido con transiciones
       document.querySelector('#titulo').textContent = translations[lang].title;
-      document.querySelector('.pregunta').textContent = translations[lang].question;
+      document.querySelector('.pregunta').textContent = translations[lang].welcome;
       document.querySelector('#btnSi').textContent = translations[lang].yes;
       document.querySelector('#btnNo').textContent = translations[lang].no;
 
@@ -604,7 +902,7 @@
     }
 
     /* --- Social feed logic (client-side, localStorage) --- */
-    const STORAGE_KEY = 'nexo_feed_v1';
+    const STORAGE_KEY = 'Dripzy_feed_v1';
     let posts = [];
 
     function loadPosts() {
@@ -650,7 +948,7 @@
         alert('Añade texto o una imagen para publicar.');
         return;
       }
-      const user = localStorage.getItem('nexo_user') || document.getElementById('display-name').value || 'Tú';
+      const user = localStorage.getItem('Dripzy_user') || document.getElementById('display-name').value || 'Tú';
       // Ensure we capture thumb and maybe full image
       const thumb = document.getElementById('compose-image-thumb') ? document.getElementById('compose-image-thumb').value : '';
       const full = document.getElementById('compose-image-data') ? document.getElementById('compose-image-data').value : '';
@@ -849,7 +1147,7 @@
 
       // Populate display name from localStorage
       const nameInput = document.getElementById('display-name');
-      const stored = localStorage.getItem('nexo_user');
+      const stored = localStorage.getItem('Dripzy_user');
       if (nameInput && stored) nameInput.value = stored;
     });
 
@@ -858,7 +1156,7 @@
       if (!nameInput) return;
       const v = (nameInput.value || '').trim();
       if (!v) return alert('Introduce un nombre válido');
-      localStorage.setItem('nexo_user', v);
+      localStorage.setItem('Dripzy_user', v);
       // update posts' user label for new posts
       alert('Nombre guardado: ' + v);
     }
@@ -905,7 +1203,7 @@
       if (!txt) return;
       const idx = posts.findIndex(p => p.id === id);
       if (idx === -1) return;
-      posts[idx].comments.push({ user: localStorage.getItem('nexo_user') || 'Tú', text: txt, ts: new Date().toISOString() });
+      posts[idx].comments.push({ user: localStorage.getItem('Dripzy_user') || 'Tú', text: txt, ts: new Date().toISOString() });
       savePosts();
       renderFeed();
     }

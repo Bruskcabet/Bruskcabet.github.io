@@ -1,12 +1,12 @@
 {
-  "name": "Nexo - Interactivo",
-  "short_name": "Nexo",
-  "description": "Una experiencia interactiva con efectos visuales y multilenguaje",
-  "start_url": "/",
+  "name": "Dripzy",
+  "short_name": "Dripzy",
+  "description": "Red social interactiva con efectos visuales",
+  "start_url": "https://bruskcabet.github.io/dripzy/",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#f5e6d3",
-  "theme_color": "#2E4052",
+  "background_color": "#1a1f25",
+  "theme_color": "#0095f6",
   "icons": [
     {
       "src": "/favicon.svg",
